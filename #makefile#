@@ -1,0 +1,2 @@
+waveequation: *.cpp
+	g++ -02 *.cpp -o waveequation
