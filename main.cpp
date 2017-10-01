@@ -1,4 +1,5 @@
 #include <iostream>
+#include "vector.h"
 
 
 using namespace std;
@@ -18,13 +19,12 @@ int sign(double x){
 	}
 }
 
-double upwindScheme(double deltaX,double deltaT,double u){
+void upwindScheme(double deltaX,double deltaT,double resultArray[][100], double u){
 
-	double resultArray[5][100];
 
 	for(int i=0; i<100 ; i++){
-		resultArray[0][i] = f0(-40+deltaX*i);	
-	} 
+		resultArray[0][i] = f0(-40+deltaX*i);
+	}
 
 	for(int i=1; i<5 ; i++){
 		resultArray[i][0] = 0;
@@ -39,23 +39,22 @@ double upwindScheme(double deltaX,double deltaT,double u){
 
 int main(){
 
+	double tableau[5][100];
 	cout << "Start\n";
 	double previousAnswer = 0;
 	double deltaX = 0.8;
 	double deltaT = 0.001;
 	int u = 1;
 	//First entry is  time, second is space
-	double[][] resultArray = upwindScheme(deltaX,deltaT,u);
 
-	//The step is 0.8
+	upwindScheme(deltaX,deltaT,tableau,u);
+
 	for(int i=0; i<5 ; i++){
 		for(int j=0; j<100 ; j++){
-			cout << resultArray[i][j] << " ";
+			cout << tableau[i][j] << " ";
 		}
 		cout << "\n";
-	} 
+	}
 	cout << "End\n";
-	
+
 }
-
-
