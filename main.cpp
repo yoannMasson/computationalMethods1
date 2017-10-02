@@ -1,6 +1,6 @@
 #include <iostream>
 #include "vector.h"
-
+#include <math.h>
 
 using namespace std;
 
@@ -18,6 +18,36 @@ double f0(double x){
 	return 0.5*(sign(x)+1);
 }
 
+double f0Exp(double x){
+	return 0.5*exp(-(x*x));
+}
+
+void upwindSchemeExp(double deltaX,double deltaT,double resultArray[][100], double u){
+
+	for(int i=0; i<100 ; i++){
+		resultArray[0][i] = f0Exp(-40+deltaX*i);
+	}
+	resultArray[0][99] = 0;
+	for(int i=1; i<5 ; i++){
+		resultArray[i][0] = 0;
+		resultArray[i][99] = 0;
+		for(int j=1; j<99 ; j++){
+			resultArray[i][j] = -u*deltaT*((resultArray[i-1][j]-resultArray[i-1][j-1])/deltaX)+ resultArray[i-1][j];
+		}
+		cout << "\n";
+	}
+}
+
+void getAnalyticalSolutionExp(double resultArray[][100], double deltaT){
+
+	double t(0);
+	for(int j = 0; j<5;j++){
+		for(int i = 0; i<100; i++){
+			resultArray[j][i] = 0.5*exp(-((i*0.8)-40-t)*((i*0.8)-40-t));
+		}
+		t += deltaT;
+	}
+}
 
 
 void upwindScheme(double deltaX,double deltaT,double resultArray[][100], double u){
@@ -59,8 +89,8 @@ int main(){
 	int u = 1;
 	//First entry is  time, second is space
 
-	upwindScheme(deltaX,deltaT,tableau,u);
-	getAnalyticalSolution(analyticalSolution,deltaT);
+	upwindSchemeExp(deltaX,deltaT,tableau,u);
+	getAnalyticalSolutionExp(analyticalSolution,deltaT);
 	
 	cout << "Analytical solution\n";
 	for(int i=0; i<5 ; i++){
@@ -82,6 +112,7 @@ int main(){
 		cout << "\n";
 	}
 
+	fprintf(f,"\n");
 	cout << "Error Matrix\n";
 	for(int i=0; i<5 ; i++){
 		for(int j=0; j<100 ; j++){
